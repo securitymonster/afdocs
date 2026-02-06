@@ -407,17 +407,73 @@ The docs hub repo is published to Wiki.js using:
 ## 9. Diagram Standard
 
 ### 9.1 C4 model
+
 We use C4 as the default diagram structure:
+
 - L1: System Context
 - L2: Containers (deployable units)
 - L3: Components (inside a container/service)
 - L4: Code (optional)
 
-### 9.2 Diagram formats
-Preferred:
-- Structurizr DSL
-- Mermaid (for sequence diagrams)
-- Markdown tables for inventories
+### 9.2 General rules
+
+- **Prefer text-based, open formats.** Diagrams MUST be stored as source in a version-controllable, diffable format. Avoid binary-only diagram files (Visio, Lucidchart exports, PNGs without source).
+- **Diagrams MUST be wiki-renderable.** If the source format cannot be rendered directly by common wikis (e.g. Wiki.js, GitHub, GitLab), an exported SVG MUST be stored alongside the source file.
+- **One source of truth.** The text/XML source is the canonical version. The SVG is a rendered artifact. If they diverge, the source wins.
+
+### 9.3 Diagram formats
+
+Preferred formats, in order:
+
+| Format | Use case | Wiki-renderable | Notes |
+|--------|----------|-----------------|-------|
+| Mermaid | Sequence diagrams, flowcharts, C4 (via C4 extension) | Yes (most wikis) | Embedded directly in markdown code blocks |
+| Structurizr DSL | C4 architecture diagrams | No | Export SVG alongside `.dsl` files |
+| draw.io / diagrams.net (`.drawio`) | Complex visual diagrams, network topologies | No | Export SVG alongside `.drawio` files (see 9.4) |
+| Markdown tables | Inventories, simple matrices | Yes | Use for anything that doesn't need a visual diagram |
+
+Formats to avoid:
+
+| Format | Reason |
+|--------|--------|
+| Visio (`.vsdx`) | Proprietary, binary, not diffable |
+| PNG/JPG without source | No way to edit, not diffable, lossy |
+| PDF diagrams | Not editable, not diffable |
+| Lucidchart (cloud-only) | No local source file, vendor lock-in |
+
+### 9.4 draw.io / diagrams.net convention
+
+When using draw.io files:
+
+1. Store the `.drawio` source file in `docs/diagrams/`.
+2. Export an SVG of every page/tab and store it next to the source file with the same base name.
+3. Reference the SVG (not the `.drawio` file) in documentation.
+
+```
+docs/diagrams/
+  network-topology.drawio       ← source (editable)
+  network-topology.svg          ← exported render (wiki-friendly)
+  deployment-overview.drawio
+  deployment-overview.svg
+```
+
+When updating a diagram, update both the `.drawio` source and re-export the SVG. CI MAY enforce that SVGs are not stale relative to their `.drawio` source.
+
+### 9.5 Mermaid convention
+
+Mermaid diagrams SHOULD be embedded directly in markdown files using fenced code blocks:
+
+````markdown
+```mermaid
+sequenceDiagram
+    Client->>API: POST /login
+    API->>Auth: validate credentials
+    Auth-->>API: token
+    API-->>Client: 200 OK + token
+```
+````
+
+For complex Mermaid diagrams that are reused across multiple documents, store the diagram in `docs/diagrams/<name>.mmd` and reference it.
 
 ---
 
