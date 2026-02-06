@@ -86,6 +86,7 @@ Each repository MUST include:
 
 ```
 docs/
+  index.md
   component.md
   runbook.md
 ```
@@ -98,7 +99,29 @@ docs/
   diagrams/
 ```
 
-### 4.1 docs/component.md (Required)
+### 4.1 docs/index.md (Required)
+
+Landing page for the component's documentation directory. This file serves as the entry point when browsing documentation — whether in a docs hub, a wiki, or a static site generator.
+
+Required content:
+
+- Component name as heading
+- Links to `component.md`, `runbook.md`, and any other documentation in the directory
+- Brief one-line description of the component
+
+Example:
+
+```markdown
+# API Service
+
+Backend API for the application platform.
+
+- [Component](component.md) - Architecture, interfaces, and dependencies
+- [Runbook](runbook.md) - Operations and deployment procedures
+- [ADRs](adrs/) - Architecture decision records
+```
+
+### 4.2 docs/component.md (Required)
 
 This file describes the component in a standard format.
 
@@ -152,7 +175,7 @@ After the metadata header, the document MUST include:
 
 ---
 
-### 4.2 docs/runbook.md (Required)
+### 4.3 docs/runbook.md (Required)
 
 This file describes how to operate the component.
 
@@ -167,7 +190,7 @@ Minimum sections:
 
 ---
 
-### 4.3 docs/adrs/ (Optional)
+### 4.4 docs/adrs/ (Optional)
 
 Use ADRs if the component contains local design decisions.
 
