@@ -41,7 +41,7 @@ AFSS is not an incident response plan. Incident response belongs in operational 
 
 AFSS is a companion to all three existing standards:
 - AFADS section 5.6 (`05-security.md`) — AFSS provides the detailed control framework that `05-security.md` summarizes at the architecture level
-- AFADS section 4.2 (`component.md`) body section 8 (Known risks) — component risks should reference AFSS threat IDs and control IDs
+- AFADS section 4.3 (`component.md`) body section 8 (Known risks) — component risks should reference AFSS threat IDs and control IDs
 - AFOPS — security patching, certificate rotation, secret rotation, and vulnerability response are operational procedures defined per AFOPS. AFSS defines the security controls; AFOPS defines how to execute them operationally
 - AFPS — code-level security conventions (input validation patterns, auth patterns) are AFPS patterns that implement AFSS controls
 

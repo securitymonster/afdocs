@@ -34,7 +34,7 @@ This standard does **not** cover:
 ### 1.2 Relationship to AFADS
 
 AFOPS is a companion standard to AFADS. It supersedes and extends:
-- AFADS section 4.3 (`docs/runbook.md`) — AFOPS defines the full structure for runbooks
+- AFADS section 4.4 (`docs/runbook.md`) — AFOPS defines the full structure for runbooks
 - AFADS section 5.7 (`docs/architecture/06-ops.md`) — AFOPS provides the detailed procedure format that 06-ops.md references
 
 A component documented per AFADS stores its procedures as defined by AFOPS.

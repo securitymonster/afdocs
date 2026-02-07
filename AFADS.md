@@ -87,6 +87,7 @@ Each repository MUST include:
 ```
 docs/
   index.md
+  ecosystem.md
   component.md
   runbook.md
 ```
@@ -116,12 +117,97 @@ Example:
 
 Backend API for the application platform.
 
+- [Ecosystem](ecosystem.md) - Standards, related repos, and project context
 - [Component](component.md) - Architecture, interfaces, and dependencies
 - [Runbook](runbook.md) - Operations and deployment procedures
 - [ADRs](adrs/) - Architecture decision records
 ```
 
-### 4.2 docs/component.md (Required)
+### 4.2 docs/ecosystem.md (Required)
+
+This file tells an AI agent (or new team member) where to find the documentation standards, the architecture hub, and all related repositories. It is the first file an AI agent should read when entering a repository for the first time.
+
+The goal is that any repo can serve as an entry point: the agent reads `ecosystem.md` and immediately knows the full project context, where the standards live, and how to navigate to every other repo.
+
+#### Required structure
+
+##### Standards reference
+
+How to find the documentation standards that this repo follows. The agent should try the local path first (fastest, works offline), then fall back to the repository URL.
+
+##### Architecture hub
+
+Which repository is the main architecture/docs hub for the application this component belongs to. This is the repo that contains system-level docs, `components.yaml`, and the architecture narrative.
+
+##### Related repositories
+
+A table of all repositories that belong to the same application or are shared dependencies. Each entry includes the repo's role, its local path, its remote URL, and whether it is application-specific or shared.
+
+##### Application scope
+
+Which application(s) this repository belongs to. Some repositories are application-specific (they serve exactly one application). Others are shared (they serve multiple applications, like a shared library or infrastructure repo).
+
+#### Example
+
+```markdown
+# Ecosystem
+
+## Standards
+
+This repository follows the documentation standards defined in:
+
+- **Local path:** `/Users/developer/repos/llm-architecture-standard`
+- **Repository:** `https://github.com/<org>/llm-architecture-standard`
+
+Standards used: AFADS, AFOPS, AFPS, AFSS
+
+## Architecture Hub
+
+The main architecture repository for this application:
+
+- **Repo:** mb-architecture
+- **Local path:** `/Users/developer/repos/mb-architecture`
+- **Repository:** `https://github.com/<org>/mb-architecture`
+- **Docs entry point:** `docs/architecture/ai-handoff.md`
+
+## Related Repositories
+
+| Repo | Role | Local Path | Remote URL | Scope |
+|------|------|------------|------------|-------|
+| mb-architecture | Architecture hub / system docs | `/Users/developer/repos/mb-architecture` | `https://github.com/<org>/mb-architecture` | martialbook |
+| mb-webapp | SvelteKit web application | `/Users/developer/repos/mb-webapp` | `https://github.com/<org>/mb-webapp` | martialbook |
+| mb-supabase | Supabase configuration and migrations | `/Users/developer/repos/mb-supabase` | `https://github.com/<org>/mb-supabase` | martialbook |
+| purplegreen-ui | Shared UI component library | `/Users/developer/repos/purplegreen-ui` | `https://github.com/<org>/purplegreen-ui` | shared |
+| purplegreen-infra | Shared infrastructure (Terraform/K8s) | `/Users/developer/repos/purplegreen-infra` | `https://github.com/<org>/purplegreen-infra` | shared |
+
+## Application Scope
+
+This repository is **application-specific** to: **martialbook**
+
+<!-- For shared repos, use instead:
+This repository is **shared** across: martialbook, <other-app>
+-->
+```
+
+#### Field definitions
+
+| Field | Description |
+|-------|-------------|
+| **Repo** | Short repo name (used as human-readable identifier) |
+| **Role** | What this repo does (architecture hub, web app, library, infra, etc.) |
+| **Local path** | Absolute path where this repo is typically cloned. The AI agent tries this first. |
+| **Remote URL** | Git remote URL (HTTPS or SSH). The AI agent uses this if the local path is not found. |
+| **Scope** | `shared` if the repo serves multiple applications, or the application name if application-specific |
+
+#### Rules
+
+- Every repository in the ecosystem MUST appear in the Related Repositories table of every other repository in the ecosystem.
+- The **architecture hub** MUST be explicitly identified. There is exactly one architecture hub per application.
+- **Local paths** are developer-specific and MAY differ between machines. They serve as a fast-path hint for AI agents. If the path does not exist, the agent MUST fall back to the remote URL.
+- **Shared repositories** MUST list all applications they serve in the Application Scope section.
+- When a new repo is added to the ecosystem, all existing repos' `ecosystem.md` files MUST be updated.
+
+### 4.3 docs/component.md (Required)
 
 This file describes the component in a standard format.
 
@@ -175,7 +261,7 @@ After the metadata header, the document MUST include:
 
 ---
 
-### 4.3 docs/runbook.md (Required)
+### 4.4 docs/runbook.md (Required)
 
 This file describes how to operate the component.
 
@@ -190,7 +276,7 @@ Minimum sections:
 
 ---
 
-### 4.4 docs/adrs/ (Optional)
+### 4.5 docs/adrs/ (Optional)
 
 Use ADRs if the component contains local design decisions.
 
@@ -217,6 +303,7 @@ docs/
     glossary.md
     ai-handoff.md
     adrs/
+  ecosystem.yaml
   components.yaml
 ```
 
@@ -391,22 +478,114 @@ components:
 
 ---
 
-## 8. Publishing Model
+## 8. Ecosystem Registry (docs hub repo)
+
+The docs hub repo MUST contain an ecosystem registry that lists all repositories belonging to the application, plus any shared repositories it depends on.
+
+```
+docs/ecosystem.yaml
+```
+
+This file is the single source of truth for the full set of repos in the ecosystem. Individual repos' `docs/ecosystem.md` files are derived from this registry.
+
+### 8.1 Required schema
+
+```yaml
+application: martialbook
+standards_repo:
+  name: llm-architecture-standard
+  local_path: /Users/developer/repos/llm-architecture-standard
+  remote_url: https://github.com/<org>/llm-architecture-standard
+
+architecture_hub: mb-architecture
+
+repositories:
+  - name: mb-architecture
+    role: Architecture hub / system docs
+    local_path: /Users/developer/repos/mb-architecture
+    remote_url: https://github.com/<org>/mb-architecture
+    scope: martialbook
+
+  - name: mb-webapp
+    role: SvelteKit web application
+    local_path: /Users/developer/repos/mb-webapp
+    remote_url: https://github.com/<org>/mb-webapp
+    scope: martialbook
+
+  - name: mb-supabase
+    role: Supabase configuration and migrations
+    local_path: /Users/developer/repos/mb-supabase
+    remote_url: https://github.com/<org>/mb-supabase
+    scope: martialbook
+
+  - name: purplegreen-ui
+    role: Shared UI component library
+    local_path: /Users/developer/repos/purplegreen-ui
+    remote_url: https://github.com/<org>/purplegreen-ui
+    scope: shared
+    applications: [martialbook]
+
+  - name: purplegreen-infra
+    role: Shared infrastructure (Terraform/K8s)
+    local_path: /Users/developer/repos/purplegreen-infra
+    remote_url: https://github.com/<org>/purplegreen-infra
+    scope: shared
+    applications: [martialbook]
+```
+
+### 8.2 Field reference
+
+| Field | Required | Description |
+|-------|----------|-------------|
+| `application` | Yes | The application name this docs hub serves |
+| `standards_repo` | Yes | Where the documentation standards (AFADS, AFOPS, AFPS, AFSS) are defined |
+| `standards_repo.local_path` | Yes | Absolute path where the standards repo is cloned. AI agents try this first. |
+| `standards_repo.remote_url` | Yes | Git remote URL. AI agents fall back to this if local path is not found. |
+| `architecture_hub` | Yes | The `name` of the repo that is the architecture hub (must match one entry in `repositories`) |
+| `repositories[].name` | Yes | Short repo name (human-readable identifier) |
+| `repositories[].role` | Yes | What this repo does |
+| `repositories[].local_path` | Yes | Absolute path where this repo is typically cloned |
+| `repositories[].remote_url` | Yes | Git remote URL (HTTPS or SSH) |
+| `repositories[].scope` | Yes | `shared` if the repo serves multiple applications, or the application name if application-specific |
+| `repositories[].applications` | If shared | List of application names that use this shared repo |
+
+### 8.3 Rules
+
+- There MUST be exactly one `architecture_hub` per application.
+- Every repo listed in `repositories` MUST have a `docs/ecosystem.md` that is consistent with this registry.
+- Shared repositories (`scope: shared`) MUST list all applications they currently serve in the `applications` field.
+- When a shared repo is adopted by a new application, both the new application's `ecosystem.yaml` and the shared repo's `ecosystem.md` MUST be updated.
+- `local_path` values are developer-specific defaults. They MAY differ per machine. AI agents MUST treat them as hints: try the local path first, fall back to the remote URL.
+
+### 8.4 How AI agents should use the ecosystem registry
+
+When an AI agent starts a session in any repository:
+
+1. Read `docs/ecosystem.md` in the current repo.
+2. Try to access the standards repo at the local path. If not found, use the remote URL.
+3. Read the standards to understand the documentation conventions.
+4. Try to access the architecture hub at the local path. If not found, use the remote URL.
+5. Read `docs/architecture/ai-handoff.md` in the architecture hub to get system-level context.
+6. Use the Related Repositories table to navigate to other repos as needed.
+
+---
+
+## 9. Publishing Model
 
 The docs hub repo is published to Wiki.js using:
 - GitHub Actions (aggregation + publishing)
 - Argo CD (if the publishing stack itself is deployed via GitOps)
 
-### 8.1 Publishing goals
+### 9.1 Publishing goals
 - A reader must be able to browse system architecture first.
 - From the system docs, readers must be able to click through to component docs.
 - The system architecture must remain readable even if individual repos change.
 
 ---
 
-## 9. Diagram Standard
+## 10. Diagram Standard
 
-### 9.1 C4 model
+### 10.1 C4 model
 
 We use C4 as the default diagram structure:
 
@@ -415,13 +594,13 @@ We use C4 as the default diagram structure:
 - L3: Components (inside a container/service)
 - L4: Code (optional)
 
-### 9.2 General rules
+### 10.2 General rules
 
 - **Prefer text-based, open formats.** Diagrams MUST be stored as source in a version-controllable, diffable format. Avoid binary-only diagram files (Visio, Lucidchart exports, PNGs without source).
 - **Diagrams MUST be wiki-renderable.** If the source format cannot be rendered directly by common wikis (e.g. Wiki.js, GitHub, GitLab), an exported SVG MUST be stored alongside the source file.
 - **One source of truth.** The text/XML source is the canonical version. The SVG is a rendered artifact. If they diverge, the source wins.
 
-### 9.3 Diagram formats
+### 10.3 Diagram formats
 
 Preferred formats, in order:
 
@@ -429,7 +608,7 @@ Preferred formats, in order:
 |--------|----------|-----------------|-------|
 | Mermaid | Sequence diagrams, flowcharts, C4 (via C4 extension) | Yes (most wikis) | Embedded directly in markdown code blocks |
 | Structurizr DSL | C4 architecture diagrams | No | Export SVG alongside `.dsl` files |
-| draw.io / diagrams.net (`.drawio`) | Complex visual diagrams, network topologies | No | Export SVG alongside `.drawio` files (see 9.4) |
+| draw.io / diagrams.net (`.drawio`) | Complex visual diagrams, network topologies | No | Export SVG alongside `.drawio` files (see 10.4) |
 | Markdown tables | Inventories, simple matrices | Yes | Use for anything that doesn't need a visual diagram |
 
 Formats to avoid:
@@ -441,7 +620,7 @@ Formats to avoid:
 | PDF diagrams | Not editable, not diffable |
 | Lucidchart (cloud-only) | No local source file, vendor lock-in |
 
-### 9.4 draw.io / diagrams.net convention
+### 10.4 draw.io / diagrams.net convention
 
 When using draw.io files:
 
@@ -459,7 +638,7 @@ docs/diagrams/
 
 When updating a diagram, update both the `.drawio` source and re-export the SVG. CI MAY enforce that SVGs are not stale relative to their `.drawio` source.
 
-### 9.5 Mermaid convention
+### 10.5 Mermaid convention
 
 Mermaid diagrams SHOULD be embedded directly in markdown files using fenced code blocks:
 
@@ -477,7 +656,7 @@ For complex Mermaid diagrams that are reused across multiple documents, store th
 
 ---
 
-## 10. Kubernetes + GitOps Conventions (Recommended)
+## 11. Kubernetes + GitOps Conventions (Recommended)
 
 To improve architecture traceability, the system SHOULD define:
 
@@ -490,38 +669,45 @@ To improve architecture traceability, the system SHOULD define:
 
 ---
 
-## 11. Definition of Done (Documentation)
+## 12. Definition of Done (Documentation)
 
-A component is considered “documented” when:
+A component is considered "documented" when:
+- `docs/ecosystem.md` exists and references the standards repo, architecture hub, and related repos
 - `docs/component.md` exists and follows the structure
 - `docs/runbook.md` exists and is usable
 - it is registered in `docs/components.yaml`
 - the system docs reference it by `component_id`
 
-The system is considered “architecturally documented” when:
+The system is considered "architecturally documented" when:
 - all system-level files exist in `docs/architecture/`
+- `docs/ecosystem.yaml` exists and lists all repos in the ecosystem
 - the C4 L1 and L2 views are present
 - system-level ADRs exist for key decisions
 - `ai-handoff.md` is current
 
 ---
 
-## 12. How AI Should Use This Standard
+## 13. How AI Should Use This Standard
 
-When an AI session starts, it should:
+When an AI session starts in any repository, it should:
 
-1. Read `docs/architecture/ai-handoff.md`
-2. Read `docs/architecture/00-orientation.md`
-3. Read `docs/architecture/01-context.md`
-4. Read `docs/architecture/02-containers.md`
-5. Read `docs/architecture/03-deployment.md`
-6. Review system ADRs in `docs/architecture/adrs/`
-7. Use `docs/components.yaml` to locate component docs
-8. Read component docs only as needed
+1. Read `docs/ecosystem.md` in the current repo to find the standards repo and architecture hub
+2. Try to access the standards repo at the local path; if not found, use the remote URL
+3. Read the standards (AFADS, AFOPS, AFPS, AFSS) to understand documentation conventions
+4. Try to access the architecture hub at the local path; if not found, use the remote URL
+5. Read `docs/architecture/ai-handoff.md` in the architecture hub
+6. Read `docs/architecture/00-orientation.md`
+7. Read `docs/architecture/01-context.md`
+8. Read `docs/architecture/02-containers.md`
+9. Read `docs/architecture/03-deployment.md`
+10. Review system ADRs in `docs/architecture/adrs/`
+11. Use `docs/components.yaml` to locate component docs
+12. Use `docs/ecosystem.yaml` to discover all related repos
+13. Read component docs only as needed
 
 ---
 
-## 13. Future Extensions (Optional)
+## 14. Future Extensions (Optional)
 
 Possible additions:
 - automatic extraction of Argo CD inventory into docs
@@ -532,11 +718,12 @@ Possible additions:
 
 ---
 
-## 14. Summary
+## 15. Summary
 
 This standard provides:
 - a stable system architecture memory
 - consistent component documentation across repos
+- an ecosystem registry for cross-repo discovery and navigation
 - decision traceability through ADRs
 - compatibility with GitOps and multi-repo systems
 - a structure that both humans and AI can reliably use
