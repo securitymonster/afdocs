@@ -31,6 +31,130 @@ All five standards share the same `component_id` namespace (from AFADS) and refe
 
 All standards are designed so an AI agent starting a new session can discover, read, and act on the documentation without institutional knowledge. An AI agent can assess compliance posture by reading AFCS mappings and scorecards, then trace any gap back to the specific AFSS control or policy that needs attention.
 
+## Usage
+
+The examples below show how to prompt an LLM to apply AFDOCS standards. Each prompt is designed to be copy-pasted into a new session. Replace placeholders (`<…>`) with your actual values.
+
+### New Repository
+
+Bootstrap AFDOCS documentation for a project from scratch:
+
+```text
+Read the AFDOCS standards at https://github.com/securitymonster/afdocs — specifically
+AFADS.md, AFPS.md, AFSS.md, AFOPS.md (OPS-STANDARD.md), and AFCS.md.
+
+This is a new <language/framework> project called <project-name>.
+Set up the AFDOCS documentation structure:
+
+1. Create docs/index.md (documentation hub) per AFADS
+2. Create docs/component.md describing this component
+3. Create the initial YAML registries (components.yaml, conventions.yaml,
+   procedures.yaml, controls.yaml, frameworks.yaml)
+4. Scaffold placeholder files for conventions, procedures, and security controls
+
+The component_id is: <component-id>
+```
+
+### Existing Repository
+
+Retrofit AFDOCS onto a codebase that already has code but lacks structured documentation:
+
+```text
+Read the AFDOCS standards at https://github.com/securitymonster/afdocs — specifically
+AFADS.md, AFPS.md, AFSS.md, AFOPS.md (OPS-STANDARD.md), and AFCS.md.
+
+This repository (<repo-name>) is an existing <language/framework> project.
+Audit the codebase and generate AFDOCS-compliant documentation:
+
+1. Read the code and infer the architecture — create docs/component.md per AFADS
+2. Document the existing coding conventions you observe — create conventions
+   per AFPS (naming, structure, patterns, testing)
+3. Identify security controls already in place — document them per AFSS
+4. Document any operational procedures that exist (CI/CD, deploy scripts) per AFOPS
+5. Create the YAML registries for everything you document
+
+The component_id is: <component-id>
+```
+
+### Multi-Repo with Central Documentation Hub
+
+When your system spans multiple repositories, AFADS defines a central "system documentation hub" that aggregates documentation from all component repos. This hub can also sync to a wiki.
+
+```text
+Read the AFDOCS standards at https://github.com/securitymonster/afdocs — specifically
+AFADS.md (sections 5 and 8) and AFCS.md.
+
+I have a central documentation repo (<docs-repo>) and these component repos:
+- <repo-1> (component_id: <id-1>)
+- <repo-2> (component_id: <id-2>)
+- <repo-3> (component_id: <id-3>)
+
+Set up the system documentation hub per AFADS section 5:
+
+1. Create the hub structure: 00-orientation.md through 06-ops.md
+2. Create ecosystem.yaml listing all component repos with their URLs and
+   component_ids per AFADS section 8
+3. Create a system-level security overview (05-security.md) that aggregates
+   controls from all components per AFSS
+4. Create compliance scorecards per AFCS that cover the full system
+5. Structure the docs so they can be published to a wiki — each top-level
+   file maps to a wiki page, with cross-links using relative paths
+```
+
+### Per-Standard Prompts
+
+Use these when you want to apply a single standard to a repository.
+
+**AFADS — Architecture documentation:**
+
+```text
+Read AFADS.md from https://github.com/securitymonster/afdocs.
+Document the architecture of this repository per AFADS: create docs/component.md,
+a C4 context diagram (Mermaid), and register the component in components.yaml.
+Component_id: <component-id>
+```
+
+**AFOPS — Operational procedures:**
+
+```text
+Read OPS-STANDARD.md from https://github.com/securitymonster/afdocs.
+Document the operational procedures for this repository per AFOPS: create
+docs/runbook.md as the index, write procedures for deployment, rollback, and
+backup in docs/procedures/, and register them in procedures.yaml.
+Component_id: <component-id>
+```
+
+**AFPS — Coding conventions:**
+
+```text
+Read AFPS.md from https://github.com/securitymonster/afdocs.
+Analyze this codebase and document the coding conventions per AFPS: create
+conventions for naming, structure, testing, and patterns in docs/conventions/,
+and register them in conventions.yaml.
+Component_id: <component-id>
+```
+
+**AFSS — Security controls:**
+
+```text
+Read AFSS.md from https://github.com/securitymonster/afdocs.
+Audit this repository for security controls and document them per AFSS:
+create docs/security.md as the index, document each control in
+docs/security/controls/, create a threat model, and register controls
+in controls.yaml.
+Component_id: <component-id>
+```
+
+**AFCS — Compliance mapping:**
+
+```text
+Read AFCS.md from https://github.com/securitymonster/afdocs.
+Map this project's AFSS controls to <framework> (e.g., OWASP Top 10 Web 2021,
+NIS2 Article 21). Create a compliance mapping, checklist, and scorecard in
+docs/compliance/. Register the framework in frameworks.yaml.
+Component_id: <component-id>
+```
+
 ## License
 
 This work is licensed under a [Creative Commons Attribution-ShareAlike 4.0 International License](https://creativecommons.org/licenses/by-sa/4.0/).
