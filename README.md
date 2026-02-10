@@ -155,6 +155,26 @@ docs/compliance/. Register the framework in frameworks.yaml.
 Component_id: <component-id>
 ```
 
+## References
+
+These standards build on or reference the following external frameworks and methodologies:
+
+| Framework | Used in | Context |
+| --------- | ------- | ------- |
+| [C4 Model](https://c4model.com/) | AFADS | Default architecture diagram structure (L1–L4) |
+| [ADR (Architecture Decision Records)](https://adr.github.io/) | AFADS, AFPS, AFSS | Format for documenting architectural decisions |
+| [STRIDE](https://learn.microsoft.com/en-us/azure/security/develop/threat-modeling-tool-threats) | AFADS, AFSS | Recommended threat modeling methodology |
+| [LINDDUN](https://linddun.org/) | AFADS | Privacy-focused threat modeling methodology |
+| [OWASP Top 10 Web (2021)](https://owasp.org/Top10/) | AFCS | Web application security compliance framework |
+| [OWASP API Security (2023)](https://owasp.org/API-Security/) | AFCS | API security compliance framework |
+| [OWASP Mobile Top 10 (2024)](https://owasp.org/www-project-mobile-top-10/) | AFCS | Mobile application security compliance framework |
+| [OWASP Top 10 for LLM (2025)](https://genai.owasp.org/resource/owasp-top-10-for-llm-applications-2025/) | AFCS | AI/LLM application security compliance framework |
+| [CVSS (v3.1/v4.0)](https://www.first.org/cvss/) | AFCS | Vulnerability risk scoring methodology |
+| [NIS2 Directive (EU 2022/2555)](https://eur-lex.europa.eu/eli/dir/2022/2555) | AFCS | European cybersecurity regulation for essential entities |
+| [RFC 2119](https://www.rfc-editor.org/rfc/rfc2119) | AFPS, AFSS | MUST/SHOULD/MAY requirement language |
+
+ISO 27001, SOC 2, and GDPR are not directly integrated but are supported as mapping targets through AFCS.
+
 ## License
 
 This work is licensed under a [Creative Commons Attribution-ShareAlike 4.0 International License](https://creativecommons.org/licenses/by-sa/4.0/).
