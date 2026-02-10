@@ -1,4 +1,4 @@
-# LLM Architecture Standard
+# AFDOCS — AI-Friendly Documentation Standards
 
 A set of documentation standards designed to be both human-readable and AI/LLM-parseable, for systems that span multiple repositories, infrastructure, and application components.
 
