@@ -6,7 +6,8 @@ Last updated: 2026-02-07
 Author: Sebastian Mang
 Companion to: AI-Friendly Architecture Documentation Standard (AFADS),
               AI-Friendly Operational Procedures Standard (AFOPS),
-              AI-Friendly Programming Standard (AFPS)
+              AI-Friendly Programming Standard (AFPS),
+              AI-Friendly Compliance Standard (AFCS)
 
 ## 1. Purpose
 
@@ -33,7 +34,7 @@ This standard covers **application and infrastructure security**:
 
 ### 1.2 What AFSS Is Not
 
-AFSS is not a penetration testing methodology. It is not a compliance framework (SOC 2, ISO 27001, GDPR). It is a documentation standard for security controls, policies, and review processes that may support those frameworks.
+AFSS is not a penetration testing methodology. It is not a compliance framework (SOC 2, ISO 27001, GDPR). It is a documentation standard for security controls, policies, and review processes that may support those frameworks. For compliance framework mappings, checklists, risk scoring, and compliance scorecards, see the AI-Friendly Compliance Standard (AFCS).
 
 AFSS is not an incident response plan. Incident response belongs in operational procedures (AFOPS) and the architecture ops document (AFADS `06-ops.md`).
 
@@ -209,7 +210,7 @@ last_verified: 2026-02-01
 verification_procedure_id: verify-rls-policies    # AFOPS procedure ID
 related_controls: [authz-supabase-policies]
 enforced_by: [supabase-rls, postgres]
-compliance_refs: []                                # e.g., ["SOC2-CC6.1", "OWASP-A01"]
+compliance_refs: []                                # e.g., ["SOC2-CC6.1", "OWASP-A01"] — see AFCS section 11.3 for canonical ID formats
 tags: [rls, postgres, supabase, authorization]
 supersedes: auth-rls-user-profiles-v1
 adr_link: docs/adrs/0005-rls-strategy.md
@@ -842,6 +843,7 @@ A system is considered **security-documented** when:
 | AFADS | Section 5.2 (`01-context.md`) trust boundaries | Trust boundaries in the context diagram must align with the AFSS threat model trust boundaries |
 | AFOPS | Procedures of type `patch` and `maintenance` | Security patching and rotation procedures are AFOPS procedures. AFSS controls reference them via `verification_procedure_id` |
 | AFPS | Conventions of type `pattern` | Code-level security patterns (input validation, auth middleware) are AFPS patterns that implement AFSS controls |
+| AFCS | Compliance mappings, checklists, risk assessments | AFCS maps external compliance frameworks (OWASP, NIS2, etc.) to AFSS controls and policies using `control_id` and `policy_id` |
 
 ### 16.2 What AFSS does not replace
 
