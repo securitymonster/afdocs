@@ -155,6 +155,18 @@ docs/compliance/. Register the framework in frameworks.yaml.
 Component_id: <component-id>
 ```
 
+## Output
+
+All standards produce **Markdown** documents with **YAML** frontmatter for metadata. Each standard also defines a YAML registry file that serves as a machine-readable index for AI agents and CI tools.
+
+| Standard | YAML registries |
+| -------- | --------------- |
+| AFADS | `components.yaml`, `ecosystem.yaml` |
+| AFOPS | `procedures.yaml` |
+| AFPS | `conventions.yaml` |
+| AFSS | `controls.yaml`, `policies.yaml` |
+| AFCS | `frameworks.yaml`, `scorecards.yaml` |
+
 ## References
 
 These standards build on or reference the following external frameworks and methodologies:
