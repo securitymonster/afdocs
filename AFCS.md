@@ -7,7 +7,8 @@ Author: Sebastian Mang
 Companion to: AI-Friendly Architecture Documentation Standard (AFADS),
               AI-Friendly Operational Procedures Standard (AFOPS),
               AI-Friendly Programming Standard (AFPS),
-              AI-Friendly Security Standard (AFSS)
+              AI-Friendly Security Standard (AFSS),
+              AI-Friendly Roadmap Standard (AFRS)
 
 ## 1. Purpose
 

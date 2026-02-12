@@ -5,7 +5,10 @@ Status: Draft / Working Standard
 Last updated: 2026-02-07
 Author: Sebastian Mang
 Companion to: AI-Friendly Architecture Documentation Standard (AFADS),
-              AI-Friendly Operational Procedures Standard (AFOPS)
+              AI-Friendly Operational Procedures Standard (AFOPS),
+              AI-Friendly Security Standard (AFSS),
+              AI-Friendly Compliance Standard (AFCS),
+              AI-Friendly Roadmap Standard (AFRS)
 
 ## 1. Purpose
 

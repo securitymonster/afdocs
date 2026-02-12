@@ -11,6 +11,7 @@ A set of documentation standards designed to be both human-readable and AI/LLM-p
 | **AFPS** | [AFPS.md](AFPS.md) | AI-Friendly Programming Standard — how to document and enforce coding conventions, patterns, and development practices |
 | **AFSS** | [AFSS.md](AFSS.md) | AI-Friendly Security Standard — how to document security controls, policies, threat models, and security review processes |
 | **AFCS** | [AFCS.md](AFCS.md) | AI-Friendly Compliance Standard — how to document compliance mappings, risk assessments, and compliance scoring against external frameworks (OWASP, NIS2, etc.) |
+| **AFRS** | [AFRS.md](AFRS.md) | AI-Friendly Roadmap Standard — how to document roadmaps, technical debt, security improvements, and track progress on initiatives |
 
 ## Design Goals
 
@@ -22,14 +23,15 @@ A set of documentation standards designed to be both human-readable and AI/LLM-p
 - Coding conventions that are the source of truth for linter and formatter configs
 - Traceable security controls that map to threats, policies, and verification steps
 - Quantifiable compliance coverage with traceability from external frameworks to security controls
+- Traceable roadmaps connecting planned work to components, security controls, and compliance gaps
 
 ## How They Fit Together
 
-**AFADS** defines where documentation lives and how to describe architecture (components, dependencies, deployment topology, ADRs). **AFOPS** extends AFADS by defining how to write the operational procedures that keep that architecture running (deployments, backups, scaling, patching). **AFPS** defines how to document and enforce coding conventions, patterns, and development practices — the source of truth from which linter configs and CI checks are derived. **AFSS** defines how to document security controls, policies, and threat models — connecting threats to verifiable controls at every layer. **AFCS** defines how to map AFSS controls and policies to external compliance frameworks (OWASP, NIS2, etc.), providing checklists, risk matrices, and compliance scorecards.
+**AFADS** defines where documentation lives and how to describe architecture (components, dependencies, deployment topology, ADRs). **AFOPS** extends AFADS by defining how to write the operational procedures that keep that architecture running (deployments, backups, scaling, patching). **AFPS** defines how to document and enforce coding conventions, patterns, and development practices — the source of truth from which linter configs and CI checks are derived. **AFSS** defines how to document security controls, policies, and threat models — connecting threats to verifiable controls at every layer. **AFCS** defines how to map AFSS controls and policies to external compliance frameworks (OWASP, NIS2, etc.), providing checklists, risk matrices, and compliance scorecards. **AFRS** defines how to plan and track work through roadmaps, technical debt registries, and security improvements — connecting planned work to components (AFADS), procedures (AFOPS), conventions (AFPS), security controls (AFSS), and compliance gaps (AFCS).
 
-All five standards share the same `component_id` namespace (from AFADS) and reference each other by stable IDs: AFOPS procedures verify AFSS controls, AFPS patterns implement AFSS controls in code, AFSS controls reference AFOPS procedures for operational verification, and AFCS mappings trace external compliance requirements to AFSS controls and policies.
+All six standards share the same `component_id` namespace (from AFADS) and reference each other by stable IDs: AFOPS procedures verify AFSS controls, AFPS patterns implement AFSS controls in code, AFSS controls reference AFOPS procedures for operational verification, AFCS mappings trace external compliance requirements to AFSS controls and policies, and AFRS roadmap items reference components, controls, procedures, and compliance requirements to ensure planned work is traceable end-to-end.
 
-All standards are designed so an AI agent starting a new session can discover, read, and act on the documentation without institutional knowledge. An AI agent can assess compliance posture by reading AFCS mappings and scorecards, then trace any gap back to the specific AFSS control or policy that needs attention.
+All standards are designed so an AI agent starting a new session can discover, read, and act on the documentation without institutional knowledge. An AI agent can assess compliance posture by reading AFCS mappings and scorecards, generate progress reports from AFRS roadmaps, and trace any gap back to the specific AFSS control, AFOPS procedure, or AFRS roadmap item that needs attention.
 
 ## Usage
 
@@ -41,7 +43,7 @@ Bootstrap AFDOCS documentation for a project from scratch:
 
 ```text
 Read the AFDOCS standards at https://github.com/securitymonster/afdocs — specifically
-AFADS.md, AFPS.md, AFSS.md, AFOPS.md (OPS-STANDARD.md), and AFCS.md.
+AFADS.md, AFPS.md, AFSS.md, AFOPS.md (OPS-STANDARD.md), AFCS.md, and AFRS.md.
 
 This is a new <language/framework> project called <project-name>.
 Set up the AFDOCS documentation structure:
@@ -49,8 +51,10 @@ Set up the AFDOCS documentation structure:
 1. Create docs/index.md (documentation hub) per AFADS
 2. Create docs/component.md describing this component
 3. Create the initial YAML registries (components.yaml, conventions.yaml,
-   procedures.yaml, controls.yaml, frameworks.yaml)
+   procedures.yaml, controls.yaml, frameworks.yaml, roadmaps.yaml)
 4. Scaffold placeholder files for conventions, procedures, and security controls
+5. Create docs/roadmap/ with an initial feature roadmap or technical debt
+   registry per AFRS
 
 The component_id is: <component-id>
 ```
@@ -61,7 +65,7 @@ Retrofit AFDOCS onto a codebase that already has code but lacks structured docum
 
 ```text
 Read the AFDOCS standards at https://github.com/securitymonster/afdocs — specifically
-AFADS.md, AFPS.md, AFSS.md, AFOPS.md (OPS-STANDARD.md), and AFCS.md.
+AFADS.md, AFPS.md, AFSS.md, AFOPS.md (OPS-STANDARD.md), AFCS.md, and AFRS.md.
 
 This repository (<repo-name>) is an existing <language/framework> project.
 Audit the codebase and generate AFDOCS-compliant documentation:
@@ -71,7 +75,9 @@ Audit the codebase and generate AFDOCS-compliant documentation:
    per AFPS (naming, structure, patterns, testing)
 3. Identify security controls already in place — document them per AFSS
 4. Document any operational procedures that exist (CI/CD, deploy scripts) per AFOPS
-5. Create the YAML registries for everything you document
+5. Create docs/roadmap/ per AFRS if there are known planned features or
+   technical debt items worth tracking
+6. Create the YAML registries for everything you document
 
 The component_id is: <component-id>
 ```
@@ -82,7 +88,7 @@ When your system spans multiple repositories, AFADS defines a central "system do
 
 ```text
 Read the AFDOCS standards at https://github.com/securitymonster/afdocs — specifically
-AFADS.md (sections 5 and 8) and AFCS.md.
+AFADS.md (sections 5 and 8), AFCS.md, and AFRS.md.
 
 I have a central documentation repo (<docs-repo>) and these component repos:
 - <repo-1> (component_id: <id-1>)
@@ -97,7 +103,9 @@ Set up the system documentation hub per AFADS section 5:
 3. Create a system-level security overview (05-security.md) that aggregates
    controls from all components per AFSS
 4. Create compliance scorecards per AFCS that cover the full system
-5. Structure the docs so they can be published to a wiki — each top-level
+5. Create docs/roadmap/ per AFRS for system-level initiatives and
+   cross-component roadmap items
+6. Structure the docs so they can be published to a wiki — each top-level
    file maps to a wiki page, with cross-links using relative paths
 ```
 
@@ -155,6 +163,17 @@ docs/compliance/. Register the framework in frameworks.yaml.
 Component_id: <component-id>
 ```
 
+**AFRS — Roadmap and planning:**
+
+```text
+Read AFRS.md from https://github.com/securitymonster/afdocs.
+Create roadmap documentation per AFRS: generate docs/roadmap/ with a feature
+roadmap, technical debt registry, or security roadmap as appropriate. Include
+structured items with IDs, owners, status, priorities, and acceptance criteria.
+Register roadmaps in roadmaps.yaml.
+Component_id: <component-id>
+```
+
 ## Output
 
 All standards produce **Markdown** documents with **YAML** frontmatter for metadata. Each standard also defines a YAML registry file that serves as a machine-readable index for AI agents and CI tools.
@@ -166,6 +185,7 @@ All standards produce **Markdown** documents with **YAML** frontmatter for metad
 | AFPS | `conventions.yaml` |
 | AFSS | `controls.yaml`, `policies.yaml` |
 | AFCS | `frameworks.yaml`, `scorecards.yaml` |
+| AFRS | `roadmaps.yaml` |
 
 ## References
 
