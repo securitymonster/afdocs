@@ -1,0 +1,16 @@
+{
+  "name": "afdocs",
+  "displayName": "AFDOCS — AI-Friendly Documentation Standards",
+  "description": "Complete suite of AI-Friendly Documentation Standards with validation agents, hooks, and formatting. Covers architecture (AFADS), operations (AFOPS), programming conventions (AFPS), security (AFSS), compliance (AFCS), and roadmaps (AFRS).",
+  "version": "0.2.0",
+  "author": {
+    "name": "Sebastian Mang"
+  },
+  "homepage": "https://github.com/securitymonster/afdocs",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/securitymonster/afdocs.git"
+  },
+  "license": "CC-BY-SA-4.0",
+  "keywords": ["documentation", "architecture", "operations", "security", "compliance", "roadmaps", "standards"]
+}
