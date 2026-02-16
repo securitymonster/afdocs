@@ -174,6 +174,66 @@ Register roadmaps in roadmaps.yaml.
 Component_id: <component-id>
 ```
 
+## Claude Code Plugin
+
+AFDOCS ships as a [Claude Code plugin](plugin/) with skills, agents, hooks, and an output style. The plugin gives Claude Code native awareness of all six standards.
+
+### Installation
+
+**From GitHub:**
+
+```bash
+# Add this repo as a plugin marketplace
+/plugin marketplace add securitymonster/afdocs
+
+# Install the plugin
+/plugin install afdocs@securitymonster-afdocs
+```
+
+**For local development:**
+
+```bash
+# Clone the repo
+git clone https://github.com/securitymonster/afdocs.git
+
+# Run Claude Code with the plugin loaded directly
+claude --plugin-dir ./afdocs/plugin
+```
+
+### Skills
+
+Skills are slash commands that give Claude the key schemas, templates, and rules for each standard:
+
+| Command | Standard | Use when... |
+|---------|----------|-------------|
+| `/afdocs:afads` | Architecture | documenting components, C4 diagrams, ADRs, ecosystem registries |
+| `/afdocs:afops` | Operations | writing deploy, rollback, backup, scaling, or patching procedures |
+| `/afdocs:afps` | Programming | documenting naming conventions, code patterns, testing strategies |
+| `/afdocs:afss` | Security | documenting security controls, policies, threat models |
+| `/afdocs:afcs` | Compliance | mapping controls to OWASP, NIS2, ISO 27001, or other frameworks |
+| `/afdocs:afrs` | Roadmaps | creating feature roadmaps, technical debt registries, security plans |
+
+### Agents
+
+Agents are specialized subagents that Claude delegates to automatically based on the task:
+
+| Agent | Description |
+|-------|-------------|
+| **docs-validator** | Audits existing documentation against all six standards. Reports critical issues, warnings, and suggestions with section references. Read-only — never modifies files. |
+| **docs-bootstrapper** | Scaffolds the full AFDOCS documentation structure for a new or existing project. Analyzes the codebase and generates real content, not just templates. |
+| **compliance-auditor** | Cross-references AFSS controls, AFCS compliance mappings, and AFRS security roadmap items to generate a compliance posture report. |
+
+### Hooks
+
+| Event | What it does |
+|-------|-------------|
+| **SessionStart** | Detects if the current project uses AFDOCS by checking for registry files (`components.yaml`, `controls.yaml`, etc.) and surfaces which standards are in use. |
+| **PostToolUse** (Write/Edit) | Validates YAML frontmatter after writing or editing files in `docs/`. Checks for required `*_id` fields and catches YAML syntax errors. |
+
+### Output Style
+
+The `afdocs-format` output style ensures Claude follows AFDOCS formatting conventions when generating documentation: YAML frontmatter, numbered sections, RFC 2119 language, kebab-case IDs, and proper cross-references.
+
 ## Output
 
 All standards produce **Markdown** documents with **YAML** frontmatter for metadata. Each standard also defines a YAML registry file that serves as a machine-readable index for AI agents and CI tools.
