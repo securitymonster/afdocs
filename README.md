@@ -187,7 +187,7 @@ AFDOCS ships as a [Claude Code plugin](plugin/) with skills, agents, hooks, and 
 /plugin marketplace add securitymonster/afdocs
 
 # Install the plugin
-/plugin install afdocs@securitymonster-afdocs
+/plugin install afdocs@afdocs
 ```
 
 **For local development:**

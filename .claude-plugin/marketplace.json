@@ -1,0 +1,13 @@
+{
+  "name": "afdocs",
+  "owner": {
+    "name": "Sebastian Mang"
+  },
+  "plugins": [
+    {
+      "name": "afdocs",
+      "source": "./plugin",
+      "description": "AI-Friendly Documentation Standards — skills, agents, hooks, and formatting for AFADS, AFOPS, AFPS, AFSS, AFCS, and AFRS."
+    }
+  ]
+}
